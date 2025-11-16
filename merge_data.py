@@ -40,7 +40,7 @@ for col in string_cols:
     combined[col] = combined[col].astype(str).str.strip()
 
 # --- Output ---
-combined.to_excel("combined_calls.xlsx", index=False)
-print("Merged file written to combined_calls.xlsx")
+combined.to_csv("combined_calls.csv", index=False)
+print("Merged file written to combined_calls.csv")
 print("Rows:", len(combined))
 print("Columns:", combined.columns.tolist())
