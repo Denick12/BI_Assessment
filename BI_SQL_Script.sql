@@ -127,6 +127,58 @@ GROUP BY month
 ORDER BY month;
 
 
+-- 16). Is there a correlation between hold time and handle time?
+SELECT 
+    (
+        (SUM("Total_Hold_Time" * "Total_Handle_Time") 
+        - (SUM("Total_Hold_Time") * SUM("Total_Handle_Time") / COUNT(*)))
+        /
+        SQRT(
+            (SUM(POWER("Total_Hold_Time", 2)) - POWER(SUM("Total_Hold_Time"), 2) / COUNT(*)) *
+            (SUM(POWER("Total_Handle_Time", 2)) - POWER(SUM("Total_Handle_Time"), 2) / COUNT(*))
+        )
+    ) AS correlation_hold_handle
+FROM combined_calls;
+
+--17) How is talk time affected by hold time?
+SELECT 
+    (
+        (SUM("Total_Talk_Time" * "Total_Hold_Time") 
+        - (SUM("Total_Talk_Time") * SUM("Total_Hold_Time") / COUNT(*)))
+        /
+        SQRT(
+            (SUM(POWER("Total_Talk_Time", 2)) - POWER(SUM("Total_Talk_Time"), 2) / COUNT(*)) *
+            (SUM(POWER("Total_Hold_Time", 2)) - POWER(SUM("Total_Hold_Time"), 2) / COUNT(*))
+        )
+    ) AS correlation_talk_hold
+FROM combined_calls;
+
+--18) Is there a correlation between hold time and disconnect type? If so, please explain it.
+SELECT 
+    "disconnectType",
+    AVG("Total_Hold_Time") AS avg_hold_time,
+    COUNT(*) AS call_count
+FROM combined_calls
+GROUP BY "disconnectType"
+ORDER BY avg_hold_time DESC;
+
+-- Answer: 
+
+-- Although you cannot compute a numeric correlation, the comparison of mean hold times reveals:
+
+-- More complex or error-prone disconnect types tend to have higher hold times,
+
+-- While simple or agent-ended disconnect types tend to have lower hold times.
+
+-- This provides useful operational insight even without a formal correlation coefficient.
+
+
+
+
+
+
+
+
 
 
 
